@@ -4,9 +4,9 @@
 #include  <stdint.h>
 
 // NOTE: LEDs data protocol can be simulated with plain SPI (MOSI only)
-// with appropriate timing (1 byte per 1.2 us which gives SPI frequency 3.33 MHz),
+// with appropriate timing (1 byte per 1.25us which gives SPI frequency 3.2 MHz),
 // where 0 will be encoded with 0x80 and 1 will be encoded with 0xC0
-#define SK6805_SPI_FREQ 3330000
+#define SK6805_SPI_FREQ 3200000
 
 // Encoding buffer size for one LED
 #define SK6805_LED_ENCODING_SIZE 12
