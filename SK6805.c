@@ -31,15 +31,23 @@ uint8_t *SK6805_EncodeLedData(uint32_t grbColor, uint8_t *data) {
     return &(data[SK6805_LED_ENCODING_SIZE]);
 }
 
- void SK6805_Transmit(uint32_t grbColors[], int ledsNumber, uint8_t *buf) {
+ void SK6805_Transmit(uint32_t grbColors[], int ledsNumber, uint8_t *buf, int bufSize) {
+    // Check buffer size
+    if (bufSize < SK6805_LEDS_BUFFER_SIZE(ledsNumber)) {
+        return;
+    }
+
     // Encode led data
     uint8_t *data = buf;
     for (int i = 0; i < ledsNumber; ++i) {
         data = SK6805_EncodeLedData((uint32_t)grbColors[i], data);
     }
 
-    // Transmit with SPI
-    platform->spiWrite(buf, SK6805_LED_ENCODING_SIZE * ledsNumber);
+    // Encode extra dummy black led
+    data = SK6805_EncodeLedData(0, data);
+
+    // Transmit with SPI (with extra dummy led)
+    platform->spiWrite(buf, SK6805_LED_ENCODING_SIZE * (ledsNumber + 1));
 
     // Delay 80 us, as per datasheet
     platform->delayUs(80);
